@@ -1,0 +1,66 @@
+{% extends 'staff_template/base_template.html' %} {% block page_title %} List Student Apply for Exception in Paying Dormitory Fees {% endblock page_title %} {% block main_content %}
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">List Applicant</h3>
+
+                        <div class="card-tools">
+                            <div class="input-group input-group-sm" style="width: 150px;">
+                                <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-hover text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Student ID</th>
+                                    <th>Student Name</th>
+                                    <th>Email</th>
+                                    <th>Address</th>
+                                    <th>Submitted</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for apply in apply %}
+                                <tr>
+                                    <td>{{ apply.id }}</td>
+                                    <td>{{ apply.student_id.admin.id }}</td>
+                                    <td>{{ apply.student_id.admin.first_name }} {{ apply.student_id.admin.last_name }}</td>
+                                    <td>{{ apply.student_id.admin.email }}</td>
+                                    <td>{{ apply.student_id.address }}</td>
+                                    <td>{{ apply.created_at }}</td>
+                                    <td>
+                                        {% if apply.apply_status == 0 %}
+                                        <a href="{% url 'student_approve_apply' apply_id=apply.id %}" class="btn btn-success">Approve</a>
+                                        <a class="btn btn-danger" href="{% url 'student_disapprove_apply' apply_id=apply.id %}">Disapprove</a> {% elif apply.apply_status == 1 %}
+                                        <button class="btn btn-warning" disabled="disabled" data-toggle="modal" data-target="#reply_modal">Approved</button> {% else %}
+                                        <button class="btn btn-danger" disabled="disabled" data-toggle="modal" data-target="#reply_modal">Disapproved</button> {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /.content -->
+{% endblock main_content %}

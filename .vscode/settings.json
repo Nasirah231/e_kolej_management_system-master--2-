@@ -1,0 +1,11 @@
+{
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportMissingImports": "none"
+    },
+
+    "python.analysis.extraPaths": [
+        "./e_kolej_management_app"
+    ]
+}
+
+

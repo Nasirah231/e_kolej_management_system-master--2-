@@ -1,0 +1,140 @@
+{% extends 'staff_template/base_template.html' %} {% block page_title %} Home {% endblock page_title %} {% block main_content %}
+<section class="content">
+    <div class="container-fluid">
+
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">List Applicant</h3>
+
+                        <div class="card-tools">
+                            <div class="input-group input-group-sm" style="width: 150px;">
+                                <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-hover text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Submitted</th>
+                                    <th>Student Name</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for apply in apply %}
+                                <tr>
+                                    <td>{{ apply.id }}</td>
+                                    <td>{{ apply.created_at }}</td>
+                                    <td>{{ apply.student_id.admin.first_name }} {{ apply.student_id.admin.last_name }}</td>
+                                    <td>
+                                        {% if apply.apply_status == 0 %}
+                                        <a href="{% url 'student_approve_apply' apply_id=apply.id %}" class="btn btn-success">Approve</a>
+                                        <a class="btn btn-danger" href="{% url 'student_disapprove_apply' apply_id=apply.id %}">Disapprove</a> {% elif apply.apply_status == 1 %}
+                                        <button class="btn btn-warning" disabled="disabled" data-toggle="modal" data-target="#reply_modal">Approved</button> {% else %}
+                                        <button class="btn btn-danger" disabled="disabled" data-toggle="modal" data-target="#reply_modal">Disapproved</button> {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /.content -->
+{% endblock main_content %} {% block custom_js %}
+<script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-messaging.js"></script>
+<script>
+    var firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "FIREBASE_AUTH_URL",
+        databaseURL: "FIREBASE_DATABASE_URL",
+        projectId: "FIREBASE_PROJECT_ID",
+        storageBucket: "FIREBASE_STORAGE_BUCKET_URL",
+        messagingSenderId: "FIREBASE_SENDER_ID",
+        appId: "FIREBASE_APP_ID",
+        measurementId: "FIREBASE_MEASUREMENT_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const messaging = firebase.messaging();
+
+    function IntitalizeFireBaseMessaging() {
+        messaging
+            .requestPermission()
+            .then(function() {
+                console.log("Notification Permission");
+                return messaging.getToken();
+            })
+            .then(function(token) {
+                console.log("Token : " + token);
+                sendToServer(token);
+            })
+            .catch(function(reason) {
+                console.log(reason);
+            });
+    }
+
+    messaging.onMessage(function(payload) {
+        console.log(payload);
+        const notificationOption = {
+            body: payload.notification.body,
+            icon: payload.notification.icon
+        };
+
+        if (Notification.permission === "granted") {
+            var notification = new Notification(payload.notification.title, notificationOption);
+
+            notification.onclick = function(ev) {
+                ev.preventDefault();
+                window.open(payload.notification.click_action, '_blank');
+                notification.close();
+            }
+        }
+
+    });
+    messaging.onTokenRefresh(function() {
+        messaging.getToken()
+            .then(function(newtoken) {
+                console.log("New Token : " + newtoken);
+                sendToServer(newtoken);
+            })
+            .catch(function(reason) {
+                console.log(reason);
+            })
+    });
+
+    function sendToServer(token) {
+        $.ajax({
+                url: '{% url '
+                staff_fcmtoken_save ' %}',
+                type: 'POST',
+                data: {
+                    token: token
+                },
+            })
+            .done(function(response) {
+                if (response == "True") {
+                    console.log("Token Save");
+                } else {
+                    console.log("Error in Token Save");
+                }
+            });
+    }
+    IntitalizeFireBaseMessaging();
+</script>
+{% endblock custom_js %}
