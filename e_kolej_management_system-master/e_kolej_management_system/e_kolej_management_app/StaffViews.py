@@ -1,7 +1,6 @@
 import json
 from datetime import datetime
 from uuid import uuid4
-import requests
 import csv
 
 from django.contrib.auth.models import User
