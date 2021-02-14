@@ -221,7 +221,6 @@ def student_feedback_message(request):
     feedbacks = FeedBackStudent.objects.all()
     return render(request, "hod_template/student_feedback_template.html", {"feedbacks": feedbacks})
 
-
 @csrf_exempt
 def student_feedback_message_replied(request):
     feedback_id = request.POST.get("id")
@@ -234,7 +233,6 @@ def student_feedback_message_replied(request):
         return HttpResponse("True")
     except:
         return HttpResponse("False")
-
 
 @csrf_exempt
 def staff_feedback_message_replied(request):

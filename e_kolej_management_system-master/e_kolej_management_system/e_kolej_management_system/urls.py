@@ -54,7 +54,7 @@ urlpatterns = [
     path('staff_feedback_message', HodViews.staff_feedback_message,
          name="staff_feedback_message"),
     path('staff_feedback_message_replied', HodViews.staff_feedback_message_replied,
-         name="staff_feedback_message_replied"),
+         name="staff_feedback_message_replied"), 
     path('admin_profile', HodViews.admin_profile, name="admin_profile"),
     path('admin_profile_save', HodViews.admin_profile_save,
          name="admin_profile_save"),
@@ -82,6 +82,8 @@ urlpatterns = [
          StaffViews.view_applicant, name="view_applicant"),
     path('view_applicant_save', StaffViews.view_applicant_save,
          name="view_applicant_save"),
+
+     path('export_csv', StaffViews.export_csv, name="export-csv"),
 
     path('student_approve_apply/<str:apply_id>',
          StaffViews.student_approve_apply, name="student_approve_apply"),

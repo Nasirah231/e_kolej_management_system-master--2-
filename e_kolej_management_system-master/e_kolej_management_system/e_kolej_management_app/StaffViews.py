@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 from uuid import uuid4
 import requests
+import csv
 
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
@@ -243,5 +244,20 @@ def staff_all_notification(request):
     notifications=NotificationStaffs.objects.filter(staff_id=staff.id)
     return render(request,"staff_template/all_notification.html",{"notifications":notifications})
 
+def export_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Diposition'] = 'attachment; filename=List_Applicant' + '.csv'
+
+    writer = csv.writer(response)
+    writer.writerow(['ID', 'Student ID', 'Student Name', 'Level', 'Scholarship', 'Family Income', 'Family Problem', 'Health Problem', 'Submitted', 'Status'])
+
+    apply = ApplyException.objects.all()
+
+    for apply in apply:
+        writer.writerow([apply.id, apply.student_id.admin.id,
+                         apply.student_id.admin.first_name, apply.student_id.admin.last_name, apply.level, apply.scholarship, apply.family_income, apply.family_problem, apply.health_problem, apply.created_at])
+    return response
+
 def returnHtmlWidget(request):
     return render(request,"widget.html")
+

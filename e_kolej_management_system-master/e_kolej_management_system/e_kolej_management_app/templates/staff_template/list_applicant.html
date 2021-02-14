@@ -11,7 +11,12 @@
                         <h3 class="card-title">List Applicant</h3>
 
                         <div class="card-tools">
+                            <a href="{% url 'export-csv' %}" class="btn btn-info">Export CSV</a>
+
+
                             <div class="input-group input-group-sm" style="width: 150px;">
+
+
                                 <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
 
                                 <div class="input-group-append">
@@ -28,8 +33,11 @@
                                     <th>ID</th>
                                     <th>Student ID</th>
                                     <th>Student Name</th>
-                                    <th>Email</th>
-                                    <th>Address</th>
+                                    <th>Level</th>
+                                    <th>Scholarship</th>
+                                    <th>Family Income</th>
+                                    <th>Family Problem</th>
+                                    <th>Health Problem</th>
                                     <th>Submitted</th>
                                     <th>Status</th>
                                 </tr>
@@ -40,8 +48,11 @@
                                     <td>{{ apply.id }}</td>
                                     <td>{{ apply.student_id.admin.id }}</td>
                                     <td>{{ apply.student_id.admin.first_name }} {{ apply.student_id.admin.last_name }}</td>
-                                    <td>{{ apply.student_id.admin.email }}</td>
-                                    <td>{{ apply.student_id.address }}</td>
+                                    <td>{{ apply.level }}</td>
+                                    <td>{{ apply.scholarship }}</td>
+                                    <td>{{ apply.family_income }}</td>
+                                    <td>{{ apply.family_problem }}</td>
+                                    <td>{{ apply.health_problem }}</td>
                                     <td>{{ apply.created_at }}</td>
                                     <td>
                                         {% if apply.apply_status == 0 %}

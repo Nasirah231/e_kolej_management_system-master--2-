@@ -92,8 +92,7 @@
             var message = $("#reply_message").val()
 
             $.ajax({
-                    url: '{% url '
-                    staff_feedback_message_replied ' %}',
+                    url: '{% url "staff_feedback_message_replied" %}',
                     type: 'POST',
                     data: {
                         id: id,
